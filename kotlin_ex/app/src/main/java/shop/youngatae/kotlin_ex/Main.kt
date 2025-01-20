@@ -5,6 +5,7 @@ fun main() {
     name();
     ex()
     ifmun()
+    tet()
 }
 fun name() {
     println("name 김용태");
@@ -26,4 +27,8 @@ fun ifmun() {
     }else{
         println("num2 Win")
     }
+}
+fun tet(){
+    var num1:Int = 10
+    println(num1)
 }
