@@ -1,6 +1,8 @@
 package shop.youngatae.dgtodo.ui
 
 import android.content.Intent
+import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +41,24 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,AddTodoActivity::class.java)
             startActivityForResult(intent, ADD_TODO_REQUEST_CODE)
         }
+        findViewById<FloatingActionButton>(R.id.fab2).setOnClickListener{
+            val intent = Intent(this,WebActivity::class.java)
+            startActivity(intent)
+        }
         loadTodos()
+        //사운드
+        val soundPool = SoundPool.Builder().build()
+        val ding =soundPool.load(this,R.raw.windowstart,1)
+        val music = MediaPlayer.create(this,R.raw.music)
+
+
+        findViewById<FloatingActionButton>(R.id.fab_ding).setOnClickListener{
+            soundPool.play(ding,1f,1f,0,0,1f)
+        }
+        findViewById<FloatingActionButton>(R.id.fab_music).setOnClickListener{
+            music.start()
+        }
+
     }
     private fun loadTodos() {
         lifecycleScope.launch {
@@ -57,4 +76,5 @@ class MainActivity : AppCompatActivity() {
     companion object{
         private const val  ADD_TODO_REQUEST_CODE = 1001
     }
+
 }

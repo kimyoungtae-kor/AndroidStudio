@@ -29,7 +29,7 @@ class TodoAdapter(private val onTodoClick: (Todo) -> Unit)
         holder.bind(todo)
     }
 
-    override fun getItemCount(): Int = todos.count()
+    override fun getItemCount(): Int = todos.size
     //
 
     inner class  TodoViewHolder(view:View) : RecyclerView.ViewHolder(view){
@@ -38,7 +38,7 @@ class TodoAdapter(private val onTodoClick: (Todo) -> Unit)
         fun bind(todo: Todo){
             checkBox.isChecked = todo.completed
             title.text = todo.title
-            itemView.setOnClickListener {  }
+            itemView.setOnClickListener { onTodoClick(todo) }
         }
     }
 }

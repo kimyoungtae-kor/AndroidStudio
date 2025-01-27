@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WebNavigator</string>
+    <string name="title_naver">apple</string>
+    <string name="title_opgg">gmail</string>
+    <string name="title_minecraft">kakao</string>
+    <string name="title_dang">google</string>
+</resources>
