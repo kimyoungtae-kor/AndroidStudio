@@ -1,5 +1,6 @@
 package shop.youngatae.hof
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,20 +16,21 @@ import androidx.core.app.NotificationManagerCompat
 
 class NotificationBroadCast : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (context == null || intent == null) return
+        Log.d("NotificationReceiver", "NotificationBroadCast 실행됨 - Intent: ${intent?.action}") // ✅ 확인용 로그 추가
+
+        if (context == null || intent == null) {
+            Log.e("NotificationReceiver", "context 또는 intent가 null")
+            return
+        }
 
         val message = intent.getStringExtra("message") ?: "새로운 알림이 도착했습니다."
-        Log.d("NotificationReceiver", "📩 받은 알림: $message")
+        Log.d("NotificationReceiver", "받은 알림: $message") // ✅ 로그 추가
 
-        val appContext = context.applicationContext // ✅ Application Context 사용
-
-        if (ActivityCompat.checkSelfPermission(appContext, android.Manifest.permission.POST_NOTIFICATIONS)
-            == PackageManager.PERMISSION_GRANTED) {
-            showNotification(appContext, "푸시 알림", message)
-        } else {
-            Log.e("NotificationReceiver", "🚨 알림 권한이 없어 푸시 알림을 표시할 수 없음")
-        }
+        showNotification(context, "WebSocket 알림", message)
     }
+
+
+
 
     private fun showNotification(context: Context, title: String, message: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

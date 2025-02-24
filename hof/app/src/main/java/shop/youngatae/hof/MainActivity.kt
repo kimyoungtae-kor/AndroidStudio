@@ -1,7 +1,10 @@
 package shop.youngatae.hof
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -17,11 +20,36 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var notificationReceiver: NotificationBroadCast
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        val filter = IntentFilter("shop.youngatae.hof.NOTIFY")
+        // ✅ BroadcastReceiver 객체 먼저 초기화
+        notificationReceiver = NotificationBroadCast()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(notificationReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(notificationReceiver, filter)
+        }
 
+        Log.d("MainActivity", "✅ NotificationBroadCast 수동 등록 완료")
+
+
+
+        setContentView(R.layout.activity_main)
+//        val filter = IntentFilter("shop.youngatae.hof.NOTIFY")
+//        notificationReceiver = NotificationBroadCast()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            registerReceiver(NotificationBroadCast(), filter, Context.RECEIVER_NOT_EXPORTED) // ✅ 올바른 플래그 사용
+//            Log.d("NotificationReceiver", "ㅇㅇㅇㅇㅇㅇ")
+//        } else {
+//            registerReceiver(NotificationBroadCast(), filter) // ✅ 기존 방식 유지
+//            Log.d("NotificationReceiver", "ㄴㄴ안됬음")
+//        }
         WebView.setWebContentsDebuggingEnabled(true)
         val webView: WebView = findViewById(R.id.webView)
 
@@ -56,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopWebSocketService()
+        unregisterReceiver(notificationReceiver) // ✅ 꼭 해제해야 함
     }
 
     // ✅ Foreground Service 실행 권한 요청 (Android 14 이상)

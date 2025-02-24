@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-service:2.6.2")  // 최신 버전 사용
     implementation("org.java-websocket:Java-WebSocket:1.5.3") // 최신 버전 사용 가능
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

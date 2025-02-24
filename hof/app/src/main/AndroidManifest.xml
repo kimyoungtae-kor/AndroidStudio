@@ -32,9 +32,10 @@
         <service android:name=".WebSocketService"
             android:exported="false"
             android:foregroundServiceType="dataSync"/>  <!-- ✅ Foreground Service Type 지정 -->
-
-        <receiver android:name=".NotificationBroadCast"
-            android:exported="false">
+        <receiver
+            android:name=".NotificationBroadCast"
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="shop.youngatae.hof.NOTIFY" />
             </intent-filter>
