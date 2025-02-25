@@ -28,7 +28,10 @@
             </intent-filter>
         </activity>
 
+
         <!-- ✅ WebSocket Foreground Service 등록 -->
+<!--        android:foregroundServiceType="dataSync"-->
+
         <service android:name=".WebSocketService"
             android:exported="false"
             android:foregroundServiceType="dataSync"/>  <!-- ✅ Foreground Service Type 지정 -->
@@ -40,7 +43,12 @@
                 <action android:name="shop.youngatae.hof.NOTIFY" />
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

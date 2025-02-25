@@ -20,7 +20,10 @@ class WebSocketService : Service() {
         startForeground(1, createNotification()) // ✅ Foreground Service 실행
         WebSocketManager.connectWebSocket(applicationContext) // ✅ WebSocket 유지
     }
-
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("WebSocketService", "✅ WebSocketService 재시작됨")
+        return START_STICKY // ✅ 서비스가 종료되지 않도록 설정
+    }
     override fun onDestroy() {
         super.onDestroy()
         Log.d("WebSocketService", "❌ WebSocket Foreground Service 종료")
@@ -43,11 +46,14 @@ class WebSocketService : Service() {
         }
 
         return NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // 아이콘만 표시 (텍스트는 최소화)
 //            .setSilent(true) // ✅ 소리 없음 설정
 //            .setContentTitle("가구의 집")
 //            .setContentText("WebSocket을 유지 중...")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
+//            .setSmallIcon(android.R.drawable.ic_notification_clear_all) // ✅ 투명 아이콘 사용
+//            .setSilent(true) // ✅ 소리, 진동 없음
+//            .setPriority(NotificationCompat.PRIORITY_MIN) // ✅ 우선순위 최소
+            .setVisibility(NotificationCompat.VISIBILITY_SECRET) // ✅ 잠금화면에서도 보이지 않음
             .build()
     }
 }

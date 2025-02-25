@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -54,6 +55,7 @@ class NotificationBroadCast : BroadcastReceiver() {
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.hof_notification_icon)) // ✅ 원하는 아이콘 표시
             .setContentTitle(title)
             .setContentText(message)
             .setAutoCancel(true)

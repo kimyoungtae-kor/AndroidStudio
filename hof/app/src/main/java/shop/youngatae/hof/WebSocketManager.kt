@@ -13,14 +13,18 @@ import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 
 object WebSocketManager {
-    private const val SERVER_URL = "ws://10.0.2.2:8080/api/v1/ws/notify"
+    private const val SERVER_URL = "wss://hof.lshwan.com/api/v1/ws/notify"
     private var webSocketClient: WebSocketClient? = null
     private const val CHANNEL_ID = "websocket_notifications"
 
     fun connectWebSocket(context: Context) {
         try {
             val uri = URI(SERVER_URL)
-            webSocketClient = object : WebSocketClient(uri) {
+            val headers = mapOf(
+                "Upgrade" to "websocket",
+                "Connection" to "Upgrade"
+            )
+            webSocketClient = object : WebSocketClient(uri,headers) {
                 override fun onOpen(handshakedata: ServerHandshake?) {
                     Log.d("WebSocket", "✅ WebSocket 연결 성공")
                 }
@@ -28,7 +32,7 @@ object WebSocketManager {
                 override fun onMessage(message: String?) {
                     message?.let {
                         Log.d("WebSocket", "📩 받은 메시지: $it")
-                        sendNotification(context, "새로운 알림", it) // ✅ 바로 푸시 알림 발송
+                        sendNotification(context, "오늘의 가구의 집", it) // ✅ 바로 푸시 알림 발송
                     }
                 }
 

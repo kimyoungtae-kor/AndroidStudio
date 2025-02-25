@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             registerReceiver(notificationReceiver, filter)
         }
 
-        Log.d("MainActivity", "✅ NotificationBroadCast 수동 등록 완료")
+        Log.d("MainActivity", " NotificationBroadCast 수동 등록 완료")
 
 
 
@@ -44,10 +44,10 @@ class MainActivity : AppCompatActivity() {
 //        val filter = IntentFilter("shop.youngatae.hof.NOTIFY")
 //        notificationReceiver = NotificationBroadCast()
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            registerReceiver(NotificationBroadCast(), filter, Context.RECEIVER_NOT_EXPORTED) // ✅ 올바른 플래그 사용
+//            registerReceiver(NotificationBroadCast(), filter, Context.RECEIVER_NOT_EXPORTED) //  올바른 플래그 사용
 //            Log.d("NotificationReceiver", "ㅇㅇㅇㅇㅇㅇ")
 //        } else {
-//            registerReceiver(NotificationBroadCast(), filter) // ✅ 기존 방식 유지
+//            registerReceiver(NotificationBroadCast(), filter) //  기존 방식 유지
 //            Log.d("NotificationReceiver", "ㄴㄴ안됬음")
 //        }
         WebView.setWebContentsDebuggingEnabled(true)
@@ -72,22 +72,23 @@ class MainActivity : AppCompatActivity() {
 
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = WebViewClient()
-        val url = "http://10.0.2.2:3000/admin"
+        val url = "http://hof.lshwan.com"
+//        val url = "http://10.0.2.2:3000/admin"
         webView.loadUrl(url)
 
-        // ✅ Foreground Service & 알림 권한 요청
+        //  Foreground Service & 알림 권한 요청
         requestPermissions()
 
-        // ✅ WebSocket 서비스 실행 (앱이 백그라운드에서도 실행되도록)
+        //  WebSocket 서비스 실행 (앱이 백그라운드에서도 실행되도록)
         startWebSocketService()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(notificationReceiver) // ✅ 꼭 해제해야 함
+        unregisterReceiver(notificationReceiver)
     }
 
-    // ✅ Foreground Service 실행 권한 요청 (Android 14 이상)
+    //  Foreground Service 실행 권한 요청 (Android 14 이상)
     private fun requestPermissions() {
         val permissions = mutableListOf<String>()
 
@@ -116,9 +117,9 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1002) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("MainActivity", "✅ Foreground Service 실행 권한 허용됨")
+                Log.d("MainActivity", " Foreground Service 실행 권한 허용됨")
             } else {
-                Log.e("MainActivity", "🚨 Foreground Service 실행 권한 거부됨")
+                Log.e("MainActivity", " Foreground Service 실행 권한 거부됨")
             }
         }
     }
