@@ -6,8 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -72,8 +75,8 @@ class MainActivity : AppCompatActivity() {
 
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = WebViewClient()
-        val url = "http://hof.lshwan.com"
-//        val url = "http://10.0.2.2:3000/admin"
+        val url = "https://hof.lshwan.com"
+//        val url = "http://10.0.2.2:3000"
         webView.loadUrl(url)
 
         //  Foreground Service & 알림 권한 요청
@@ -120,6 +123,17 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", " Foreground Service 실행 권한 허용됨")
             } else {
                 Log.e("MainActivity", " Foreground Service 실행 권한 거부됨")
+            }
+        }
+    }
+
+    fun disableBatteryOptimization(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    .setData(Uri.parse("package:" + context.packageName))
+                context.startActivity(intent)
             }
         }
     }

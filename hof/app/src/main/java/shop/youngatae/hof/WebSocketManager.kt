@@ -5,7 +5,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.java_websocket.client.WebSocketClient
@@ -38,7 +43,17 @@ object WebSocketManager {
 
                 override fun onClose(code: Int, reason: String?, remote: Boolean) {
                     Log.d("WebSocket", "🚫 WebSocket 연결 종료: $reason")
+
+                    // ✅ 웹소켓이 닫혔을 경우 10초 후 재연결
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if (isClosed()) {  // 🔹 웹소켓이 닫혀 있으면 다시 연결
+                            Log.d("WebSocket", "🔄 WebSocket 재연결 시도...")
+                            connectWebSocket(context)
+                        }
+                    }, 10000)
                 }
+
+
 
                 override fun onError(ex: Exception?) {
                     Log.e("WebSocket", "❌ WebSocket 오류 발생: ${ex?.message}")
@@ -50,11 +65,24 @@ object WebSocketManager {
         }
     }
 
+    fun isClosed(): Boolean {
+        return webSocketClient == null || !webSocketClient!!.isOpen
+    }
+
     fun disconnectWebSocket() {
         webSocketClient?.close()
         webSocketClient = null
     }
-
+    fun disableBatteryOptimization(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    .setData(Uri.parse("package:" + context.packageName))
+                context.startActivity(intent)
+            }
+        }
+    }
     // ✅ **알림 직접 발송 메서드**
     private fun sendNotification(context: Context, title: String, message: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
